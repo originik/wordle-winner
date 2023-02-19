@@ -1,0 +1,34 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.8.0'
+    id 'application'
+}
+
+application {
+    mainClassName = "MyAppKt" // add "Kt" suffix for main function source file
+}
+
+group = 'com.originik'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("com.slack.api:bolt-jetty:1.27.3")
+    implementation("org.slf4j:slf4j-simple:1.7.36") // or logback-classic
+}
+
+test {
+    useJUnitPlatform()
+}
+
+kotlin {
+    jvmToolchain(8)
+}
+
+application {
+    mainClassName = 'MainKt'
+}
