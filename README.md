@@ -25,11 +25,11 @@ I went through to create this app, so look for that in the coming week or
 two. It should answer any questions you may have.
 
 Assumptions:
-* This is using Locale.US for date calculation. You can modify this app
-to use a different locale, or even to support any locale. I just didn't need
-that functionality for my use case.
-* If you post your Wordle score while in a different timezone from your usual
-one, it could break this script.
+* This is using Sunday as the start of the week, and Saturday as the end 
+    of the week. You can modify this according to your needs.
+* This script is set up to run only on Sundays. The date range will be 
+    incorrect if you run it on a different day.
+* If you post your Wordle score while in a different timezone from your usual one, it could break this script.
 * If someone posts more than 7 Wordle scores in a week, they will be
 disqualified
 * If someone posts fewer than 7 Wordle scores in a week, they will receive

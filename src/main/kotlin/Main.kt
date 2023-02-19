@@ -41,16 +41,16 @@ fun main() {
         }
     }
 
-    // Determine the first and last day of the week. This is fixed to the US locale, but could be made dynamic
-    val numberOfDaysInTheWeek = DayOfWeek.values().count()
-    val firstDayOfWeek = WeekFields.of(Locale.US).firstDayOfWeek
-    val lastDayOfWeek = DayOfWeek.of(((firstDayOfWeek.value + 5) % numberOfDaysInTheWeek) + 1)
+    // This is assuming the first day of the week is Sunday and the last day of the week is Saturday.
+    // If you are running this for a country where that's not the case, adjust this.
+    val firstDayOfWeek = DayOfWeek.SUNDAY
+    val lastDayOfWeek = DayOfWeek.SATURDAY
 
     val wordleScoreCalculator = WordleScoreCalculator(usersInTimeZones, userIdToUserMap)
 
     val today = LocalDate.now()
     val start = today.with(TemporalAdjusters.previous(firstDayOfWeek))
-    val end = today.with(TemporalAdjusters.nextOrSame(lastDayOfWeek))
+    val end = today.with(TemporalAdjusters.previous(lastDayOfWeek))
 
     for (timezone in usersInTimeZones.keys) {
         val zoneId = ZoneId.of(timezone)
