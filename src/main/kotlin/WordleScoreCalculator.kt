@@ -1,5 +1,6 @@
 import com.slack.api.model.Message
 import com.slack.api.model.User
+import java.util.SortedMap
 
 class WordleScoreCalculator(
     private val usersInTimeZones: MutableMap<String, MutableList<User>>,
@@ -23,21 +24,28 @@ class WordleScoreCalculator(
         }
     }
 
-    fun calculateFinalScores(): List<UserScoreData> {
-        return usersToScoreDataMap.values.mapNotNull { userScoreData ->
-            return@mapNotNull if (userScoreData.days > CONTEST_DAYS) {
+    fun calculateFinalScores(): SortedMap<Int, MutableList<UserScoreData>> {
+        val finalScoreMap = sortedMapOf<Int, MutableList<UserScoreData>>()
+        usersToScoreDataMap.values.forEach { userScoreData ->
+            if (userScoreData.days > CONTEST_DAYS) {
                 // TODO: See if there is a way to de-dup the extra days, or maybe there is an
                 //  error with the start and end days that is including extra Wordle posts
                 println("User ${userScoreData.user.realName} has ${userScoreData.guesses} guesses. Figure out what went wrong.")
-                null
             } else if (userScoreData.days < CONTEST_DAYS) {
                 val missedDays = CONTEST_DAYS - userScoreData.days
                 userScoreData.guesses += missedDays * FAIL_GUESSES
-                userScoreData
+                if (!finalScoreMap.containsKey(userScoreData.guesses)) {
+                    finalScoreMap[userScoreData.guesses] = mutableListOf()
+                }
+                finalScoreMap[userScoreData.guesses]?.add(userScoreData)
             } else {
-                userScoreData
+                if (!finalScoreMap.containsKey(userScoreData.guesses)) {
+                    finalScoreMap[userScoreData.guesses] = mutableListOf()
+                }
+                finalScoreMap[userScoreData.guesses]?.add(userScoreData)
             }
-        }.sortedBy { it.guesses }
+        }
+        return finalScoreMap.toSortedMap()
     }
 
     private fun userFromId(userId: String) = userIdToUserMap[userId]

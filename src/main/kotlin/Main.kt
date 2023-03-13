@@ -70,23 +70,29 @@ fun main() {
 
     val finalScores = wordleScoreCalculator.calculateFinalScores()
     if (finalScores.isNotEmpty()) {
-        val winnerScoreData = finalScores.first()
         val formatter = DateTimeFormatter.ofPattern("MM/dd")
+        val topScore = finalScores.firstKey()
         val finalScoresStringBuilder = StringBuilder()
-        finalScoresStringBuilder.append("*Congratulations to this week's Wordle Winner (${start.format(formatter)} - ${end.format(formatter)}), ${winnerScoreData.user.profile.realName} :clap:*\n\n")
+        val winners = finalScores[topScore]!!
+        if (winners.count() > 1) {
+            finalScoresStringBuilder.append("*Congratulations to this week's Wordle Winners (${start.format(formatter)} - ${end.format(formatter)}), ${winners.joinToString(", ") { it.user.profile.realName }} :clap:*\n\n")
+        } else {
+            finalScoresStringBuilder.append("*Congratulations to this week's Wordle Winner (${start.format(formatter)} - ${end.format(formatter)}), ${winners.first().user.profile.realName} :clap:*\n\n")
+        }
+
         finalScoresStringBuilder.append("*Scores*:\n")
-        for ((index, score) in finalScores.withIndex()) {
+        for ((index, score) in finalScores.keys.withIndex()) {
             val medal = when (index) {
                 0 -> ":first_place_medal:"
                 1 -> ":second_place_medal:"
                 2 -> ":third_place_medal:"
                 else -> ""
             }
-            finalScoresStringBuilder.append("• $medal ${score.user.realName}: ${score.guesses}\n\n")
+            finalScoresStringBuilder.append("• $medal ${finalScores[score]!!.joinToString(", ") { it.user.realName }} : ${finalScores[score]!!.first().guesses}\n\n")
         }
 
         val request = ChatPostMessageRequest.builder()
-            .channel(wordleChannel)
+            .channel("C04Q9JR8KDY")
             .text(finalScoresStringBuilder.toString())
             .build()
 
