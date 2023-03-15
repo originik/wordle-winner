@@ -7,8 +7,6 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
-import java.time.temporal.WeekFields
-import java.util.*
 
 // TODO: Create a cronjob that runs this program each Sunday morning
 fun main() {
@@ -48,7 +46,10 @@ fun main() {
 
     val wordleScoreCalculator = WordleScoreCalculator(usersInTimeZones, userIdToUserMap)
 
-    val today = LocalDate.now()
+    var today = LocalDate.now()
+    while (today.dayOfWeek != DayOfWeek.SUNDAY) {
+       today = today.minusDays(1L)
+    }
     val start = today.with(TemporalAdjusters.previous(firstDayOfWeek))
     val end = today.with(TemporalAdjusters.previous(lastDayOfWeek))
 
