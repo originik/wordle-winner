@@ -8,7 +8,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 
-// TODO: Create a cronjob that runs this program each Sunday morning
 fun main() {
     val token = System.getenv("SLACK_BOT_TOKEN")
     val wordleChannel = System.getenv("WORDLE_CHANNEL")
@@ -93,7 +92,7 @@ fun main() {
         }
 
         val request = ChatPostMessageRequest.builder()
-            .channel("C04Q9JR8KDY")
+            .channel(wordleChannel)
             .text(finalScoresStringBuilder.toString())
             .build()
 
