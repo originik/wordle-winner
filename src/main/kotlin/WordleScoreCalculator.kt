@@ -15,6 +15,8 @@ class WordleScoreCalculator(
                 continue
             }
 
+
+
             val guesses =
                 guessesFromMessage(message.text) ?: continue // Probably a message not containing a Wordle score
             val scoreData = usersToScoreDataMap[user.id] ?: UserScoreData(user, 0, 0)
@@ -56,8 +58,8 @@ class WordleScoreCalculator(
 
     private fun guessesFromMessage(message: String): Int? {
         val matchResult = pointsRegex.find(message) ?: return null
-        return if (matchResult.groupValues.count() == 2) {
-            val score = matchResult.groupValues[1]
+        return if (matchResult.groupValues.count() == 3) {
+            val score = matchResult.groupValues[2]
             if (score == "X") {
                 FAIL_GUESSES
             } else {
@@ -76,6 +78,6 @@ class WordleScoreCalculator(
     companion object {
         private const val CONTEST_DAYS = 7
         private const val FAIL_GUESSES = 7
-        private val pointsRegex = Regex("Wordle \\d+ ([\\dX])/\\d")
+        private val pointsRegex = Regex("Wordle [0-9]{1,3}(,[0-9]{3})* ([\\dX])/\\d")
     }
 }

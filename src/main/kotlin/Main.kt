@@ -12,6 +12,7 @@ import java.time.temporal.TemporalAdjusters
 fun main() {
     val token = System.getenv("SLACK_BOT_TOKEN")
     val wordleChannel = System.getenv("WORDLE_CHANNEL")
+    val channelToPostTo = System.getenv("POST_CHANNEL")
     val slack = Slack.getInstance()
     val methods = slack.methods(token)
 
@@ -93,7 +94,7 @@ fun main() {
         }
 
         val request = ChatPostMessageRequest.builder()
-            .channel("C04Q9JR8KDY")
+            .channel(channelToPostTo)
             .text(finalScoresStringBuilder.toString())
             .build()
 

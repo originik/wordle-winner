@@ -17,7 +17,7 @@ repositories {
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation('com.slack.api:bolt-jetty:1.28.0')
+    implementation('com.slack.api:bolt-jetty:1.39.0')
     implementation("org.slf4j:slf4j-simple:2.0.5") // or logback-classic
 }
 
@@ -31,4 +31,14 @@ kotlin {
 
 application {
     mainClassName = 'MainKt'
+}
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "MainKt"
+    }
+    configurations["compileClasspath"].forEach {
+        from(zipTree(it.absoluteFile))
+    }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
