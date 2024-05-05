@@ -16,11 +16,31 @@ fun main() {
     val slack = Slack.getInstance()
     val methods = slack.methods(token)
 
+    if (token == null) {
+        println("SLACK_BOT_TOKEN not provided")
+        return
+    }
+
+    if (wordleChannel == null) {
+        println("WORDLE_CHANNEL not provided")
+        return
+    }
+
+    if (channelToPostTo == null) {
+        println("POST_CHANNEL not provided")
+        return
+    }
+
     // Get all the userIds of the members of the Wordle channel so that we can figure out which timezones they are
     // in for determining the applicable days of the contest
     val userIds = methods.conversationsMembers { builder ->
         builder.channel(wordleChannel)
-    }.members ?: return
+    }.members
+
+    if (userIds.isNullOrEmpty()) {
+        println("userIds are null or empty")
+        return
+    }
 
     // Map of users keyed by time zone
     val usersInTimeZones = mutableMapOf<String, MutableList<User>>()
