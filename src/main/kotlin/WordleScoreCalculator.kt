@@ -15,13 +15,9 @@ class WordleScoreCalculator(
                 continue
             }
 
-
-
-            val guesses =
-                guessesFromMessage(message.text) ?: continue // Probably a message not containing a Wordle score
+            val (key, guessCount) = guessCountFromMessage(message.text) ?: continue // Probably a message not containing a Wordle score
             val scoreData = usersToScoreDataMap[user.id] ?: UserScoreData(user, 0, 0)
-            scoreData.days += 1
-            scoreData.guesses += guesses
+            scoreData.updateGuesses(key, guessCount)
             usersToScoreDataMap[user.id] = scoreData
         }
     }
@@ -30,8 +26,6 @@ class WordleScoreCalculator(
         val finalScoreMap = sortedMapOf<Int, MutableList<UserScoreData>>()
         usersToScoreDataMap.values.forEach { userScoreData ->
             if (userScoreData.days > CONTEST_DAYS) {
-                // TODO: See if there is a way to de-dup the extra days, or maybe there is an
-                //  error with the start and end days that is including extra Wordle posts
                 println("User ${userScoreData.user.realName} has ${userScoreData.guesses} guesses. Figure out what went wrong.")
             } else if (userScoreData.days < CONTEST_DAYS) {
                 val missedDays = CONTEST_DAYS - userScoreData.days
@@ -56,15 +50,16 @@ class WordleScoreCalculator(
         return usersInTimeZones[timeZone]?.firstOrNull { it.id == user.id } != null
     }
 
-    private fun guessesFromMessage(message: String): Int? {
+    private fun guessCountFromMessage(message: String): Pair<String, Int>? {
         val matchResult = pointsRegex.find(message) ?: return null
-        return if (matchResult.groupValues.count() == 3) {
-            val score = matchResult.groupValues[2]
+        return if (matchResult.groupValues.count() == 4) {
+            val score = matchResult.groupValues[3]
+            val key = matchResult.groupValues[1]
             if (score == "X") {
-                FAIL_GUESSES
+                Pair(key, FAIL_GUESSES)
             } else {
                 try {
-                    score.toInt()
+                    Pair(key, score.toInt())
                 } catch (e: NumberFormatException) {
                     null
                 }
@@ -78,6 +73,6 @@ class WordleScoreCalculator(
     companion object {
         private const val CONTEST_DAYS = 7
         private const val FAIL_GUESSES = 7
-        private val pointsRegex = Regex("Wordle [0-9]{1,3}(,[0-9]{3})* ([\\dX])/\\d")
+        private val pointsRegex = Regex("Wordle ([0-9]{1,3}(,[0-9]{3}))* ([\\dX])/\\d")
     }
 }

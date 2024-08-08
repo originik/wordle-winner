@@ -27,8 +27,6 @@ two. It should answer any questions you may have.
 Assumptions:
 * This is using Sunday as the start of the week, and Saturday as the end 
     of the week. You can modify this according to your needs.
-* This script is set up to run only on Sundays. The date range will be 
-    incorrect if you run it on a different day.
 * If you post your Wordle score while in a different timezone from your usual one, it could break this script.
 * If someone posts more than 7 Wordle scores in a week, they will be
 disqualified
@@ -36,9 +34,12 @@ disqualified
 7 guesses as their score for each missed day. You don't get to win just
 by only posting your best scores.
 
+## How to deploy
+* Follow this tutorial: https://www.jetbrains.com/guide/java/tutorials/hello-world/packaging-the-application/
+
 ## License:
 I set the MIT License as the license for this project. Feel free to use
 it however you want, but don't try to pass it off as your own and I
 accept no responsibility for any problems it may cause, especially
-damaged relationships from fighting over who the winner is.
+damaged relationships from fighting over whom the winner is.
 
