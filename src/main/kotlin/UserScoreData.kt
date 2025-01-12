@@ -1,13 +1,13 @@
 import com.slack.api.model.User
 
-data class UserScoreData(val user: User, var guesses: Int, var days: Int) {
-    private var guessKeys = mutableSetOf<String>()
-    fun updateGuesses(key: String, guessCount: Int) {
-        if (guessKeys.contains(key)) return
+data class UserScoreData(val user: User, var score: Int, var days: Int) {
+    private var puzzleKeys = mutableSetOf<String>()
+    fun updateScore(key: String, score: Int) {
+        if (puzzleKeys.contains(key)) return
 
-        // We haven't processed this guess yet, so update guesses and days
-        guesses += guessCount
+        // We haven't processed this score yet, so update score and days
+        this.score += score
         days += 1
-        guessKeys.add(key)
+        puzzleKeys.add(key)
     }
 }

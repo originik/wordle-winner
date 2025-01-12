@@ -17,7 +17,7 @@ repositories {
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.24")
-    implementation('com.slack.api:bolt-jetty:1.39.0')
+    implementation('com.slack.api:bolt-jetty:1.45.1')
     implementation("org.slf4j:slf4j-simple:2.0.5") // or logback-classic
 }
 
